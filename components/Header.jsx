@@ -102,7 +102,7 @@ export default function Header() {
             {/* Login Button */}
             <Link
               href="/login"
-              className="hidden sm:block px-6 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-full font-medium transition-smooth hover-lift hover:shadow-lg active:scale-95"
+              className="hidden sm:block px-6 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-full font-semibold transition-smooth hover-lift hover:shadow-lg active:scale-95"
             >
               Login
             </Link>
