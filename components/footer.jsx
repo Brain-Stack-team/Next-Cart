@@ -1,79 +1,129 @@
-import Link from "next/link"
-import { Mail, Phone, MapPin } from "lucide-react"
+'use client';
+
+import Link from 'next/link';
+import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-foreground text-background mt-16">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">N</span>
-              </div>
-              <span className="font-bold text-xl">Next-Cart</span>
-            </div>
-            <p className="text-sm opacity-70 leading-relaxed mb-4">
-              Your premium marketplace for quality products at unbeatable prices. Shop with confidence.
+    <footer className="bg-gray-900 text-gray-100 mt-16 sm:mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
+          {/* About */}
+          <div className="animate-slide-in-left">
+            <h3 className="text-lg font-bold mb-4 text-white">ShopHub</h3>
+            <p className="text-gray-400 mb-4">
+              Your trusted online shopping destination for quality products at great prices.
             </p>
-            <div className="flex flex-col gap-2 text-sm opacity-70">
-              <span className="flex items-center gap-2"><Mail className="w-4 h-4" /> support@nextcart.com</span>
-              <span className="flex items-center gap-2"><Phone className="w-4 h-4" /> +1 (555) 123-4567</span>
-              <span className="flex items-center gap-2"><MapPin className="w-4 h-4" /> San Francisco, CA</span>
+            <div className="flex gap-4">
+              <Link href="#" className="hover:text-primary transition-colors">
+                <Facebook className="w-5 h-5" />
+              </Link>
+              <Link href="#" className="hover:text-primary transition-colors">
+                <Twitter className="w-5 h-5" />
+              </Link>
+              <Link href="#" className="hover:text-primary transition-colors">
+                <Instagram className="w-5 h-5" />
+              </Link>
+              <Link href="#" className="hover:text-primary transition-colors">
+                <Linkedin className="w-5 h-5" />
+              </Link>
             </div>
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
-            <ul className="flex flex-col gap-2 text-sm opacity-70">
-              <li><Link href="/products" className="hover:opacity-100 transition">All Products</Link></li>
-              <li><Link href="/products?tag=flash-sale" className="hover:opacity-100 transition">Flash Sales</Link></li>
-              <li><Link href="/products?tag=trending" className="hover:opacity-100 transition">Trending</Link></li>
-              <li><Link href="/dashboard" className="hover:opacity-100 transition">My Account</Link></li>
-              <li><Link href="/cart" className="hover:opacity-100 transition">Cart</Link></li>
+          <div className="animate-slide-in" style={{ animationDelay: '0.1s' }}>
+            <h4 className="text-lg font-bold mb-4 text-white">Quick Links</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-primary transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-primary transition-colors">
+                  Shop
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-primary transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-primary transition-colors">
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Categories */}
-          <div>
-            <h4 className="font-semibold mb-4">Categories</h4>
-            <ul className="flex flex-col gap-2 text-sm opacity-70">
-              <li><Link href="/products?category=electronics" className="hover:opacity-100 transition">Electronics</Link></li>
-              <li><Link href="/products?category=fashion" className="hover:opacity-100 transition">Fashion</Link></li>
-              <li><Link href="/products?category=beauty" className="hover:opacity-100 transition">Beauty</Link></li>
-              <li><Link href="/products?category=home" className="hover:opacity-100 transition">Home & Living</Link></li>
-              <li><Link href="/products?category=sports" className="hover:opacity-100 transition">Sports</Link></li>
+          {/* Support */}
+          <div className="animate-slide-in" style={{ animationDelay: '0.2s' }}>
+            <h4 className="text-lg font-bold mb-4 text-white">Support</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-primary transition-colors">
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-primary transition-colors">
+                  Shipping Info
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-primary transition-colors">
+                  Returns
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-primary transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Newsletter */}
-          <div>
-            <h4 className="font-semibold mb-4">Newsletter</h4>
-            <p className="text-sm opacity-70 mb-4">Subscribe for exclusive deals and updates.</p>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="flex-1 rounded-lg bg-background/10 border border-background/20 px-3 py-2 text-sm placeholder:text-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 text-background"
-              />
-              <button className="bg-accent text-accent-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition">
-                Join
-              </button>
-            </div>
+          {/* Contact */}
+          <div className="animate-slide-in-right" style={{ animationDelay: '0.3s' }}>
+            <h4 className="text-lg font-bold mb-4 text-white">Contact Us</h4>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-2 text-gray-400">
+                <MapPin className="w-5 h-5 flex-shrink-0" />
+                <span>123 Shopping Street, NY 10001</span>
+              </li>
+              <li className="flex items-center gap-2 text-gray-400">
+                <Phone className="w-5 h-5 flex-shrink-0" />
+                <span>+1 (555) 123-4567</span>
+              </li>
+              <li className="flex items-center gap-2 text-gray-400">
+                <Mail className="w-5 h-5 flex-shrink-0" />
+                <span>support@nextcart.com</span>
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div className="border-t border-background/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm opacity-60">
-          <p>2026 Next-Cart. All rights reserved.</p>
-          <div className="flex gap-4">
-            <Link href="#" className="hover:opacity-100 transition">Privacy</Link>
-            <Link href="#" className="hover:opacity-100 transition">Terms</Link>
-            <Link href="#" className="hover:opacity-100 transition">Cookies</Link>
+        {/* Divider */}
+        <div className="border-t border-gray-700 pt-8 sm:pt-12">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-gray-400 text-sm">
+              © 2024 Next-Cart. All rights reserved.
+            </p>
+            <div className="flex gap-6">
+              <Link href="#" className="text-gray-400 hover:text-primary transition-colors text-sm">
+                Terms of Service
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-primary transition-colors text-sm">
+                Privacy
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-primary transition-colors text-sm">
+                Cookies
+              </Link>
+            </div>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
