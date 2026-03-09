@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # v0 runtime files
 __v0_runtime_loader.js
 __v0_devtools.tsx
@@ -16,4 +16,3 @@ node_modules/
 dist/
 build/
 *.log
->>>>>>> b3b2e6fdb86ee63cf831e473cd9787208328fdef
