@@ -232,7 +232,7 @@ export default function SignupPage() {
                 <p className="text-center text-gray-500 text-sm mt-6">
                     By signing up, you agree to our{' '}
                     <Link href="#" className="text-primary hover:underline">
-                        Terms of Service
+                        Terms of Services
                     </Link>
                 </p>
             </div>
