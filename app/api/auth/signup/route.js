@@ -1,14 +1,22 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/mongodb';
 import { hashPassword } from '@/lib/auth';
+import { signupSchema, validateData } from '@/lib/validation';
 
 export async function POST(request) {
   try {
-    const { name, email, password } = await request.json();
+    const body = await request.json();
 
-    if (!name || !email || !password) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    // Validate input data
+    const validation = validateData(signupSchema, body);
+    if (!validation.success) {
+      return NextResponse.json({ 
+        error: validation.errors[0].message,
+        errors: validation.errors 
+      }, { status: 400 });
     }
+
+    const { name, email, password } = validation.data;
 
     const db = await getDb();
     const existingUser = await db.collection('users').findOne({ email });
