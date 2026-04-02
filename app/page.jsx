@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { Toaster } from 'sonner';
 import BannerSlider from '@/components/BannerSlider';
 import Categories from '@/components/Categories';
-import FeaturedProducts from '@/components/FeaturedProducts';
+import TrendingProducts from '@/components/trending-products';
+import RecommendedProducts from '@/components/recommended-products';
+import SubscribeSection from '@/components/SubscribeSection';
 import ProductCard from '@/components/ProductCard';
 
 export default function Home() {
@@ -38,9 +40,14 @@ export default function Home() {
         <Categories />
       </section>
 
-      {/* Featured Products */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
-        <FeaturedProducts />
+      {/* Trending Products */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <TrendingProducts />
+      </section>
+
+      {/* Recommended for You */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <RecommendedProducts />
       </section>
 
       {/* All Products Section */}
@@ -76,27 +83,8 @@ export default function Home() {
         )}
       </section>
 
-      {/* Newsletter Section */}
-      <section className="bg-gradient-to-r from-primary via-blue-600 to-secondary py-10 sm:py-12 mt-8 sm:mt-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-slide-in">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 text-balance">
-            Stay Updated
-          </h2>
-          <p className="text-white/90 text-sm sm:text-base mb-6 text-pretty">
-            Subscribe to our newsletter and get exclusive deals, new arrivals, and special offers
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-2.5 rounded-full focus:outline-none focus:ring-2 focus:ring-white text-sm"
-            />
-            <button className="px-6 sm:px-8 py-2.5 bg-white text-primary font-semibold rounded-full hover:bg-gray-100 transition-smooth hover-lift text-sm">
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </section>
+      {/* Subscribe Section */}
+      <SubscribeSection />
     </main>
   );
 }

@@ -3,136 +3,186 @@
 import { useState } from "react"
 import Link from "next/link"
 import {
-  ShoppingBag, Heart, User, MapPin, Package, ChevronRight, LogOut,
-  Clock, CheckCircle, Truck as TruckIcon, XCircle, ArrowLeft
+  Heart, User, MapPin, Package, ChevronRight, LogOut, Truck
 } from "lucide-react"
-import { orders, products } from "@/lib/data"
 
 const sidebarItems = [
-  { id: "orders", label: "My Orders", icon: ShoppingBag },
+  { id: "orders", label: "My Orders", icon: Package },
   { id: "wishlist", label: "Wishlist", icon: Heart },
   { id: "profile", label: "Profile Settings", icon: User },
   { id: "addresses", label: "Addresses", icon: MapPin },
-  { id: "tracking", label: "Order Tracking", icon: Package },
 ]
 
-const statusIcons = {
-  Processing: Clock,
-  Shipped: TruckIcon,
-  Delivered: CheckCircle,
-  Cancelled: XCircle,
-}
+// Mocked exactly as described in the user's mockup
+const orders = [
+  {
+    id: "ORD-2024-001",
+    status: "Delivered",
+    date: "Placed on February 15, 2024",
+    price: 299.98,
+    tracking: "TRK123456789",
+  },
+  {
+    id: "ORD-2024-002",
+    status: "Shipped",
+    date: "Placed on February 18, 2024",
+    price: 149.99,
+    tracking: "TRK987654321",
+  },
+  {
+    id: "ORD-2024-003",
+    status: "Processing",
+    date: "Placed on February 20, 2024",
+    price: 89.99,
+    tracking: "Pending",
+  }
+]
 
-const statusColors = {
-  Processing: "text-accent bg-accent/10",
-  Shipped: "text-primary bg-primary/10",
-  Delivered: "text-chart-3 bg-chart-3/10",
-  Cancelled: "text-destructive bg-destructive/10",
-}
+const STAGES = ["Pending", "Processing", "Shipped", "Delivered"];
+
+const OrderProgress = ({ currentStatus }) => {
+  const currentIndex = STAGES.indexOf(currentStatus);
+
+  return (
+    <div className="w-full flex items-center justify-between relative mt-6 mb-8 px-4 sm:px-12">
+      {/* Background track line */}
+      <div className="absolute left-[10%] right-[10%] top-1/2 -translate-y-1/2 h-0.5 bg-gray-200 z-0"></div>
+      
+      {/* Filled track line overlaying */}
+      {currentIndex > 0 && (
+        <div 
+          className="absolute left-[10%] top-1/2 -translate-y-1/2 h-0.5 bg-[#4f46e5] z-0 transition-all duration-500"
+          style={{ width: `${(currentIndex / 3) * 80}%` }}
+        ></div>
+      )}
+
+      {STAGES.map((stage, idx) => {
+        const isActive = idx <= currentIndex;
+        return (
+          <div key={stage} className="relative z-10 flex flex-col items-center gap-3">
+            {isActive ? (
+              <div className="w-[34px] h-[34px] bg-white rounded-full flex items-center justify-center p-1 relative">
+                <div className="w-full h-full bg-[#4f46e5] rounded-full flex items-center justify-center shadow-sm">
+                  <Package className="w-3.5 h-3.5 text-white" />
+                </div>
+              </div>
+            ) : (
+              <div className="w-[34px] h-[34px] flex items-center justify-center">
+                <div className="w-[8px] h-[8px] bg-gray-300 rounded-full"></div>
+              </div>
+            )}
+            <span className={`text-[11px] font-bold ${isActive ? 'text-gray-700' : 'text-gray-400'}`}>
+              {stage}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 export default function DashboardClient() {
   const [activeTab, setActiveTab] = useState("orders")
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
-  const wishlistProducts = products.slice(0, 4)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex items-center gap-3 mb-8">
-        <Link href="/" className="text-muted-foreground hover:text-foreground transition">
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <h1 className="text-2xl font-bold text-foreground">My Account</h1>
-      </div>
+    <div className="max-w-[1240px] mx-auto px-4 py-8 sm:py-12 bg-white min-h-[80vh]">
+      <h1 className="text-2xl font-bold text-[#1f2937] mb-8">My Account</h1>
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Mobile tab bar */}
-        <div className="lg:hidden flex gap-2 overflow-x-auto pb-2">
-          {sidebarItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition ${
-                  activeTab === item.id
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {item.label}
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Sidebar - desktop */}
-        <aside className="hidden lg:block w-64 shrink-0">
-          <div className="bg-card border border-border rounded-xl p-4 sticky top-24">
-            {/* User info */}
-            <div className="flex items-center gap-3 mb-5 px-2">
-              <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
-                <User className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="font-medium text-sm text-card-foreground">John Doe</p>
-                <p className="text-xs text-muted-foreground">john@example.com</p>
-              </div>
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
+        
+        {/* Left Sidebar Layout */}
+        <aside className="w-full lg:w-[280px] shrink-0">
+          <div className="bg-white border text-center border-gray-100 rounded-[20px] p-6 shadow-[0_2px_10px_#00000004] mb-6">
+            <div className="w-[80px] h-[80px] mx-auto rounded-full bg-[#3b82f6] text-white flex items-center justify-center text-[28px] font-bold mb-4 shadow-sm">
+              JD
             </div>
-
-            <nav className="flex flex-col gap-1">
-              {sidebarItems.map((item) => {
-                const Icon = item.icon
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition text-left w-full ${
-                      activeTab === item.id
-                        ? "bg-primary text-primary-foreground"
-                        : "text-card-foreground hover:bg-secondary"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    {item.label}
-                    <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-50" />
-                  </button>
-                )
-              })}
-              <hr className="border-border my-2" />
-              <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-destructive hover:bg-destructive/5 transition text-left w-full">
-                <LogOut className="w-4 h-4" />
-                Sign Out
-              </button>
-            </nav>
+            <h2 className="text-[18px] font-bold text-[#1f2937] mb-1">John Doe</h2>
+            <p className="text-[13px] text-gray-500 font-medium">john@example.com</p>
           </div>
+
+          <nav className="flex flex-col gap-2">
+            {sidebarItems.map((item) => {
+              const Icon = item.icon
+              const isActive = activeTab === item.id
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center gap-3 px-5 py-3.5 rounded-[12px] text-[14px] font-semibold transition-all w-full group ${
+                    isActive
+                      ? "bg-gradient-to-r from-[#4f46e5] to-[#3b82f6] text-white shadow-sm"
+                      : "bg-white text-gray-600 hover:bg-gray-50 hover:text-[#1f2937]"
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-gray-400 group-hover:text-gray-600"}`} />
+                  {item.label}
+                  <ChevronRight className={`w-4 h-4 ml-auto transition-transform ${isActive ? "text-white/80" : "text-gray-300 group-hover:translate-x-1"}`} />
+                </button>
+              )
+            })}
+            <div className="h-px bg-gray-100 my-2 mx-4"></div>
+            <button className="flex items-center gap-3 px-5 py-3.5 rounded-[12px] text-[14px] font-bold text-[#ef4444] hover:bg-red-50 transition-colors w-full group">
+              <LogOut className="w-4 h-4 text-[#ef4444]/80" />
+              Logout
+            </button>
+          </nav>
         </aside>
 
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          {/* Orders */}
+        {/* Right Content Area */}
+        <div className="flex-1 w-full min-w-0">
+          
           {activeTab === "orders" && (
             <div>
-              <h2 className="text-xl font-semibold text-foreground mb-5">My Orders</h2>
-              <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-[20px] font-bold text-[#1f2937]">My Orders</h2>
+                <span className="text-[13px] text-gray-400 font-medium">{orders.length} orders</span>
+              </div>
+              
+              <div className="flex flex-col gap-6">
                 {orders.map((order) => {
-                  const StatusIcon = statusIcons[order.status]
+                  let badgeColors = "bg-gray-100 text-gray-600";
+                  if (order.status === "Delivered") badgeColors = "bg-emerald-50 text-emerald-600";
+                  else if (order.status === "Shipped") badgeColors = "bg-[#eff6ff] text-[#3b82f6]";
+                  else if (order.status === "Processing") badgeColors = "bg-[#fef3c7] text-[#d97706]";
+
                   return (
-                    <div key={order.id} className="bg-card border border-border rounded-xl p-5">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <p className="font-medium text-card-foreground">{order.id}</p>
-                          <p className="text-xs text-muted-foreground">{order.date}</p>
+                    <div key={order.id} className="bg-white border border-gray-100 rounded-[20px] p-6 shadow-[0_2px_10px_#00000004]">
+                      {/* Top Header */}
+                      <div className="flex items-start justify-between mb-6">
+                        <div className="flex flex-col gap-1.5">
+                          <div className="flex items-center gap-3">
+                            <h3 className="font-bold text-[16px] text-[#1f2937]">{order.id}</h3>
+                            <span className={`text-[10px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded-full ${badgeColors}`}>
+                              {order.status}
+                            </span>
+                          </div>
+                          <p className="text-[13px] text-gray-500 font-medium">{order.date}</p>
                         </div>
-                        <span className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full ${statusColors[order.status]}`}>
-                          <StatusIcon className="w-3.5 h-3.5" />
-                          {order.status}
-                        </span>
+                        <div className="flex flex-col items-end gap-1.5 ">
+                          <span className="text-[22px] font-extrabold text-[#4f46e5] leading-none">${order.price.toFixed(2)}</span>
+                          <span className="text-[12px] text-gray-400 font-medium">Tracking: {order.tracking}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">{order.items} item{order.items > 1 ? "s" : ""}</span>
-                        <span className="font-semibold text-card-foreground">${order.total.toFixed(2)}</span>
+
+                      {/* Middle Progress Timeline */}
+                      <div className="py-2 border-y border-gray-100">
+                         <OrderProgress currentStatus={order.status} />
+                      </div>
+
+                      {/* Footer Actions */}
+                      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-6 w-full">
+                        <button className="w-full sm:flex-1 py-2.5 border border-gray-200 text-gray-600 text-[13px] font-bold rounded-[10px] hover:bg-gray-50 hover:text-gray-800 transition-colors">
+                          View Details
+                        </button>
+                        {order.status === "Delivered" ? (
+                          <button className="w-full sm:flex-1 py-2.5 bg-[#4f46e5] text-white text-[13px] font-bold rounded-[10px] hover:bg-indigo-600 transition-colors shadow-sm">
+                            Leave Review
+                          </button>
+                        ) : null}
+                        <button className="w-full sm:flex-1 py-2.5 border border-gray-200 text-gray-600 text-[13px] font-bold rounded-[10px] flex items-center justify-center gap-2 hover:bg-gray-50 hover:text-gray-800 transition-colors">
+                          <Truck className="w-4 h-4" />
+                          Track Order
+                        </button>
                       </div>
                     </div>
                   )
@@ -141,123 +191,10 @@ export default function DashboardClient() {
             </div>
           )}
 
-          {/* Wishlist */}
-          {activeTab === "wishlist" && (
-            <div>
-              <h2 className="text-xl font-semibold text-foreground mb-5">My Wishlist</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {wishlistProducts.map((p) => (
-                  <div key={p.id} className="bg-card border border-border rounded-xl p-4 flex gap-4">
-                    <img src={p.image} alt={p.name} className="w-20 h-20 rounded-lg object-cover" crossOrigin="anonymous" />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm text-card-foreground truncate">{p.name}</h4>
-                      <p className="text-lg font-bold text-card-foreground mt-1">${p.price.toFixed(2)}</p>
-                      <Link href={`/products/${p.slug}`} className="text-xs text-primary mt-1 inline-block hover:underline">
-                        View Product
-                      </Link>
-                    </div>
-                    <button className="self-start text-muted-foreground hover:text-destructive transition">
-                      <Heart className="w-5 h-5 fill-current" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Profile */}
-          {activeTab === "profile" && (
-            <div>
-              <h2 className="text-xl font-semibold text-foreground mb-5">Profile Settings</h2>
-              <div className="bg-card border border-border rounded-xl p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1 block">First Name</label>
-                    <input defaultValue="John" className="w-full rounded-lg bg-secondary text-secondary-foreground px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                  </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1 block">Last Name</label>
-                    <input defaultValue="Doe" className="w-full rounded-lg bg-secondary text-secondary-foreground px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                  </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1 block">Email</label>
-                    <input defaultValue="john@example.com" className="w-full rounded-lg bg-secondary text-secondary-foreground px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                  </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1 block">Phone</label>
-                    <input defaultValue="+1 (555) 123-4567" className="w-full rounded-lg bg-secondary text-secondary-foreground px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                  </div>
-                </div>
-                <button className="mt-6 bg-primary text-primary-foreground px-6 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition">
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Addresses */}
-          {activeTab === "addresses" && (
-            <div>
-              <h2 className="text-xl font-semibold text-foreground mb-5">My Addresses</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-card border border-primary rounded-xl p-5 relative">
-                  <span className="absolute top-3 right-3 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">Default</span>
-                  <p className="font-medium text-card-foreground">Home</p>
-                  <p className="text-sm text-muted-foreground mt-1">123 Main Street, Apt 4B</p>
-                  <p className="text-sm text-muted-foreground">San Francisco, CA 94102</p>
-                  <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
-                </div>
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <p className="font-medium text-card-foreground">Office</p>
-                  <p className="text-sm text-muted-foreground mt-1">456 Tech Blvd, Suite 200</p>
-                  <p className="text-sm text-muted-foreground">San Francisco, CA 94105</p>
-                  <p className="text-sm text-muted-foreground">+1 (555) 987-6543</p>
-                </div>
-                <button className="border-2 border-dashed border-border rounded-xl p-5 flex flex-col items-center justify-center gap-2 text-muted-foreground hover:border-primary/30 hover:text-primary transition">
-                  <MapPin className="w-6 h-6" />
-                  <span className="text-sm font-medium">Add New Address</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Order tracking */}
-          {activeTab === "tracking" && (
-            <div>
-              <h2 className="text-xl font-semibold text-foreground mb-5">Order Tracking</h2>
-              <div className="bg-card border border-border rounded-xl p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <p className="font-medium text-card-foreground">ORD-2024002</p>
-                    <p className="text-sm text-muted-foreground">Estimated delivery: Feb 25, 2026</p>
-                  </div>
-                  <span className="bg-primary/10 text-primary text-xs font-medium px-3 py-1.5 rounded-full">Shipped</span>
-                </div>
-
-                {/* Timeline */}
-                <div className="flex flex-col gap-0">
-                  {[
-                    { step: "Order Placed", date: "Feb 18, 2026", done: true },
-                    { step: "Payment Confirmed", date: "Feb 18, 2026", done: true },
-                    { step: "Shipped", date: "Feb 19, 2026", done: true },
-                    { step: "Out for Delivery", date: "Pending", done: false },
-                    { step: "Delivered", date: "Pending", done: false },
-                  ].map((item, i, arr) => (
-                    <div key={i} className="flex gap-4">
-                      <div className="flex flex-col items-center">
-                        <div className={`w-4 h-4 rounded-full border-2 ${item.done ? "bg-primary border-primary" : "border-border bg-card"}`} />
-                        {i < arr.length - 1 && (
-                          <div className={`w-0.5 h-10 ${item.done ? "bg-primary" : "bg-border"}`} />
-                        )}
-                      </div>
-                      <div className="pb-8">
-                        <p className={`text-sm font-medium ${item.done ? "text-card-foreground" : "text-muted-foreground"}`}>{item.step}</p>
-                        <p className="text-xs text-muted-foreground">{item.date}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          {/* Placeholders for other tabs for completeness */}
+          {activeTab !== "orders" && (
+            <div className="h-[400px] flex flex-col items-center justify-center text-center bg-gray-50 rounded-[20px] border border-dashed border-gray-200">
+               <p className="text-gray-500 font-medium">This section is currently under construction.</p>
             </div>
           )}
         </div>

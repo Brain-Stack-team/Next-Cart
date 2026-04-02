@@ -9,18 +9,35 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
-    // Simulate API call
-    setTimeout(() => {
-      alert(`Login attempt for: ${email}`);
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Failed to log in');
+      } else {
+        if (data.user?.role === 'admin') {
+          window.location.href = '/admin';
+        } else {
+          window.location.href = '/account';
+        }
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    } finally {
       setIsLoading(false);
-      setEmail('');
-      setPassword('');
-    }, 1000);
+    }
   };
 
   return (
@@ -33,13 +50,19 @@ export default function LoginPage() {
             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mx-auto mb-3">
               <span className="text-primary font-bold text-2xl">S</span>
             </div>
-            <h1 className="text-2xl font-bold text-white mb-1">ShopHub</h1>
+            <h1 className="text-2xl font-bold text-white mb-1">Next Cart</h1>
             <p className="text-white/80">Welcome Back</p>
           </div>
 
           {/* Form */}
           <div className="p-8">
             <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Error Message */}
+              {error && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+                  {error}
+                </div>
+              )}
               {/* Email Field */}
               <div className="space-y-2 animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
                 <label htmlFor="email" className="block text-sm font-semibold text-foreground">

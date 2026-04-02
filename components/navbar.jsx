@@ -83,7 +83,7 @@ export default function Navbar() {
             )}
           </Link>
 
-          <Link href="/dashboard" className="p-2 hover:bg-secondary rounded-lg transition hidden sm:block">
+          <Link href="/account" className="p-2 hover:bg-secondary rounded-lg transition hidden sm:block">
             <User className="w-5 h-5 text-foreground" />
           </Link>
 
@@ -128,7 +128,7 @@ export default function Navbar() {
               )
             })}
             <hr className="border-border my-2" />
-            <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm text-foreground hover:bg-secondary rounded-lg" onClick={() => setMenuOpen(false)}>
+            <Link href="/account" className="flex items-center gap-3 px-3 py-2.5 text-sm text-foreground hover:bg-secondary rounded-lg" onClick={() => setMenuOpen(false)}>
               <User className="w-4 h-4 text-primary" />
               <span>My Account</span>
             </Link>
