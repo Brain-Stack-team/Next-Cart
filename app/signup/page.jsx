@@ -31,15 +31,30 @@ export default function SignupPage() {
 
         setIsLoading(true);
 
-        // Simulate API call
-        setTimeout(() => {
-            alert(`Signup successful for: ${name} (${email})`);
+        try {
+            const res = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setError(data.error || 'Failed to sign up');
+            } else {
+                alert('Signup successful! Please log in.');
+                setName('');
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
+                window.location.href = '/login';
+            }
+        } catch (err) {
+            setError('An error occurred. Please try again later.');
+        } finally {
             setIsLoading(false);
-            setName('');
-            setEmail('');
-            setPassword('');
-            setConfirmPassword('');
-        }, 1000);
+        }
     };
 
     return (
@@ -52,7 +67,7 @@ export default function SignupPage() {
                         <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mx-auto mb-3">
                             <span className="text-primary font-bold text-2xl">S</span>
                         </div>
-                        <h1 className="text-2xl font-bold text-white mb-1">ShopHub</h1>
+                        <h1 className="text-2xl font-bold text-white mb-1">Next Cart</h1>
                         <p className="text-white/80">Create Your Account</p>
                     </div>
 
